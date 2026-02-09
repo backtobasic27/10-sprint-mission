@@ -7,6 +7,9 @@ import com.sprint.mission.discodeit.dto.request.UserUpdateRequest;
 import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.User;
 import com.sprint.mission.discodeit.entity.UserStatus;
+import com.sprint.mission.discodeit.exception.DuplicateEmailException;
+import com.sprint.mission.discodeit.exception.DuplicateUsernameException;
+import com.sprint.mission.discodeit.exception.UserNotFoundException;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.UserRepository;
 import com.sprint.mission.discodeit.repository.UserStatusRepository;
@@ -83,11 +86,22 @@ public class BasicUserService implements UserService {
 
         String newUsername = userUpdateRequest.newUsername();
         String newEmail = userUpdateRequest.newEmail();
-        if (userRepository.existsByEmail(newEmail)) {
-            throw new IllegalArgumentException("User with email " + newEmail + " already exists");
+
+
+//        if (userRepository.existsByEmail(newEmail)) {
+//            throw new IllegalArgumentException("User with email " + newEmail + " already exists");
+//        }
+//        if (userRepository.existsByUsername(newUsername)) {
+//            throw new IllegalArgumentException("User with username " + newUsername + " already exists");
+//        }
+
+        //자신의 현재 이메일/유저네임과 다른 경우에만 중복 체크
+        if(newEmail!=null && !newEmail.equals(user.getEmail()) && userRepository.existsByEmail(newEmail)){
+            throw new DuplicateEmailException(newEmail);
         }
-        if (userRepository.existsByUsername(newUsername)) {
-            throw new IllegalArgumentException("User with username " + newUsername + " already exists");
+
+        if(newUsername!=null && !newUsername.equals(user.getUsername())&&userRepository.existsByUsername(newUsername)){
+            throw new DuplicateUsernameException(newUsername);
         }
 
         UUID nullableProfileId = optionalProfileCreateRequest
@@ -112,7 +126,8 @@ public class BasicUserService implements UserService {
     @Override
     public void delete(UUID userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+//                .orElseThrow(() -> new NoSuchElementException("User with id " + userId + " not found"));
+        .orElseThrow(() ->new UserNotFoundException(userId));
 
         Optional.ofNullable(user.getProfileId())
                         .ifPresent(binaryContentRepository::deleteById);
