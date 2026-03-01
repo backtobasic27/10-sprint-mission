@@ -1,9 +1,8 @@
 package com.sprint.mission.discodeit.controller;
 
-import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.entity.status.BinaryContent;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;

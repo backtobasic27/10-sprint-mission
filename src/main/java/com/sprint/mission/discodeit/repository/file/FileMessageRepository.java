@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.repository.file;
 
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -103,7 +104,7 @@ public class FileMessageRepository implements MessageRepository {
               lock.unlock();
             }
           })
-          .filter(message -> message.getChannelId().equals(channelId))
+          .filter(messageResponse -> messageResponse.getChannelId().equals(channelId))
           .toList();
     } catch (IOException e) {
       throw new RuntimeException(e);

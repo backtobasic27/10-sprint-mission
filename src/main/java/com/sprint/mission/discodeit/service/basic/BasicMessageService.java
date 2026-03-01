@@ -1,9 +1,12 @@
 package com.sprint.mission.discodeit.service.basic;
 
+import static java.util.stream.StreamSupport.stream;
+
+import com.sprint.mission.discodeit.dto.UserResponse;
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
-import com.sprint.mission.discodeit.entity.BinaryContent;
 import com.sprint.mission.discodeit.entity.Message;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.repository.ChannelRepository;
@@ -71,10 +74,18 @@ public class BasicMessageService implements MessageService {
   }
 
   @Override
-  public List<Message> findAllByChannelId(UUID channelId) {
+  public List<MessageResponse> findAllByChannelId(UUID channelId) {
     return messageRepository.findAllByChannelId(channelId).stream()
+        .map(message -> {
+          UserResponse author = userRepository.findById(message.getAuthorId())
+              .map(user -> UserResponse.from(user, null))
+              .orElse(null);
+          List<UUID> attachmentIds = message.getAttachmentIds();
+          return MessageResponse.from(message, author, attachmentIds);
+        })
         .toList();
   }
+
 
   @Override
   public Message update(UUID messageId, MessageUpdateRequest request) {

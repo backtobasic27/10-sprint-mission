@@ -1,5 +1,6 @@
 package com.sprint.mission.discodeit.controller;
 
+import com.sprint.mission.discodeit.dto.message.MessageResponse;
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageCreateRequest;
 import com.sprint.mission.discodeit.dto.request.MessageUpdateRequest;
@@ -53,12 +54,13 @@ public class MessageController {
 
   //GET /api/messages?channelId={}
   @RequestMapping(method = RequestMethod.GET)
-  public ResponseEntity<List<Message>> findAllByChannelId(
+  public ResponseEntity<List<MessageResponse>> findAllByChannelId(
       @RequestParam UUID channelId
   ) {
-    List<Message> messages = messageService.findAllByChannelId(channelId);
+    List<MessageResponse> messages = messageService.findAllByChannelId(channelId);
     return ResponseEntity.ok(messages);
   }
+
 
   //PATCH /api/messages/{messageId}
   @RequestMapping(value = "/{messageId}", method = RequestMethod.PATCH)

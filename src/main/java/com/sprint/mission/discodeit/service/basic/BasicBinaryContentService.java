@@ -1,7 +1,7 @@
 package com.sprint.mission.discodeit.service.basic;
 
 import com.sprint.mission.discodeit.dto.request.BinaryContentCreateRequest;
-import com.sprint.mission.discodeit.entity.BinaryContent;
+import com.sprint.mission.discodeit.entity.status.BinaryContent;
 import com.sprint.mission.discodeit.repository.BinaryContentRepository;
 import com.sprint.mission.discodeit.service.BinaryContentService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class BasicBinaryContentService implements BinaryContentService {
     String fileName = request.fileName();
     byte[] bytes = request.bytes();
     String contentType = request.contentType();
-    BinaryContent binaryContent = new BinaryContent(
-        fileName,
+    BinaryContent bc = new BinaryContent(
+        bc.fileName,
         (long) bytes.length,
         contentType,
         bytes
